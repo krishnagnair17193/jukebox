@@ -13,9 +13,16 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
+
 from django.contrib import admin
+from django.urls import path
+from slack import views as slack_views
+from videos.views import VideoListView, VoteView, UnVoteView
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    path('admin/', admin.site.urls),
+    path('incoming/', slack_views.incoming_message, name="incoming_message_hook"),
+    path('', VideoListView.as_view(), name="video_list"),
+    path('vote/', VoteView.as_view(), name="vote"),
+    path('unvote/', UnVoteView.as_view(), name="unvote"),
 ]

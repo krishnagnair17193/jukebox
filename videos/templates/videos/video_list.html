@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+        <iframe id="ytplayer" type="text/html" width="640" height="360"
+                    src="https://www.youtube.com/embed/{{object_list.0.video_id}}/?playlist={% for id in object_list|slice:"1:" %}{{id.video_id}},{% endfor %}&autoplay=1&loop=1&"
+                    frameborder="0"></iframe>
+        <div class="col-md-12 col-xs-12 col-sm-12 ">
+
+            <div class="row">
+
+                {% for video in object_list %}
+                <div class="col-xs-12 col-sm-9 col-md-3">
+                    <p>{{video.title|truncatechars:"20"}}</p>
+                    <img class="img-reponsive img-thumbnail" src="{{video.thumb_url}}" height="200" width="200">
+                    <i class="fas fa-thumbs-up fa-2x" data-id="{{video.id}}">{{video.get_all_votes.all.count}}</i>
+                </div>
+
+                <!--/.col-xs-6.col-lg-4-->
+                {% endfor %}
+            </div><!--/row-->
+
+        </div><!--/.col-xs-12.col-sm-9-->
+    </div><!--/row-->
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+       $(".fa-thumbs-up").click(function(event){
+
+       //Need to implement per user per video voting..
+            var vote = $(this);
+            $.ajax({
+                 type:"POST",
+                 url:"/vote/",
+                 data: {
+                        'video': $(this).data('id'),
+                        'csrfmiddlewaretoken' : '{{csrf_token}}',
+                        },
+                 success: function(){
+                     vote.addClass('active');
+                     vote.html(parseInt(vote.html())+1);
+                 }
+            });
+            return false; //<---- move it here
+       });
+
+});
+</script>
+{% endblock %}
