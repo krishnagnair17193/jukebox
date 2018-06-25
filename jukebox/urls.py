@@ -24,5 +24,5 @@ urlpatterns = [
     path('incoming/', slack_views.incoming_message, name="incoming_message_hook"),
     path('', VideoListView.as_view(), name="video_list"),
     path('vote/', VoteView.as_view(), name="vote"),
-    path('unvote/', UnVoteView.as_view(), name="unvote"),
+    path('unvote/<int:video_id>/', UnVoteView.as_view(), name="unvote"),
 ]

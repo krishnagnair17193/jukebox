@@ -42,8 +42,12 @@ class Vote(models.Model):
 
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='get_all_votes')
     created = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True)
 
-    # TODO Add fields to restrict voting based on user or IP
+    # TODO Add fields to restrict voting based on user
 
     def __str__(self):
         return self.video.url
+
+    class Meta:
+        unique_together = ('video', 'ip_address')
